@@ -26,11 +26,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:minWidth="20dp"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintBaseline_toBaselineOf="@id/button7"
-        app:layout_constraintEnd_toStartOf="@id/button7"
+        app:layout_constraintBaseline_toBaselineOf="@+id/newNumber"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
@@ -41,7 +40,7 @@
         android:ems="10"
         android:inputType="numberSigned|numberDecimal"
         app:layout_constraintBaseline_toBaselineOf="@+id/result"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/operation" />
 
     <Button
         android:id="@+id/button0"
