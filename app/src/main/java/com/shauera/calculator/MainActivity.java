@@ -1,5 +1,6 @@
 package com.shauera.calculator;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -12,11 +13,14 @@ public class MainActivity extends AppCompatActivity {
     private EditText result;
     private EditText newNumber;
     private TextView displayOperation;
-    private final String DIV0ERR = "Div/0!";
+
+    private enum STATE_KEYS {
+        OPERAND1,
+        PENDING_OPERATION
+    }
 
     // Variables to hold the operation and the type of calculation
     private Double operand1 = null;
-    private Double operand2 = null;
     private String pendingOperation = "=";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 if (value.equals(".")) {
                     value = "0";
                 }
-                operand2 = Double.parseDouble(value);
+                Double operand2 = Double.parseDouble(value);
                 performOperation(operand2, pendingOperation);
             }
             pendingOperation = operation;
@@ -87,11 +91,28 @@ public class MainActivity extends AppCompatActivity {
         buttonEquals.setOnClickListener(operationButtonListener);
     }
 
-    private void performOperation(Double value, String operation) {
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        if (operand1 != null) {
+            outState.putDouble(STATE_KEYS.OPERAND1.toString(), operand1);
+        }
+        outState.putString(STATE_KEYS.PENDING_OPERATION.toString(), pendingOperation);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        operand1 = savedInstanceState.getDouble(STATE_KEYS.OPERAND1.toString());
+        pendingOperation = savedInstanceState.getString(STATE_KEYS.PENDING_OPERATION.toString());
+        displayOperation.setText(pendingOperation);
+    }
+
+    private void performOperation(Double operand2, String operation) {
         if (operand1 == null) {
-            operand1 = value;
+            operand1 = operand2;
         } else {
-            switch (pendingOperation) {
+            switch (operation) {
                 case "+" :
                     operand1 += operand2;
                     break;
@@ -100,9 +121,9 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case "/" :
                     if (operand2 == 0) {
+                        String DIV0ERR = "Div/0!";
                         result.setText(DIV0ERR);
                         operand1 = null;
-                        operand2 = null;
                     } else {
                         operand1 /= operand2;
                     }
@@ -115,9 +136,8 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         }
-        if (!(result.getText().toString().equals("Div/0!") && pendingOperation.equals("/"))) {
+        if (!(result.getText().toString().equals("Div/0!") && pendingOperation.equals("/")))
             result.setText(operand1.toString());
-        }
         newNumber.setText("");
     }
 }
