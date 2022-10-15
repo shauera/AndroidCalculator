@@ -14,14 +14,15 @@ public class MainActivity extends AppCompatActivity {
     private EditText newNumber;
     private TextView displayOperation;
 
+    // Variables to hold the operation and the type of calculation
+    private Double operand1 = null;
+    private String pendingOperation = "=";
+
     private enum STATE_KEYS {
         OPERAND1,
         PENDING_OPERATION
     }
 
-    // Variables to hold the operation and the type of calculation
-    private Double operand1 = null;
-    private String pendingOperation = "=";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         newNumber = findViewById(R.id.newNumber);
         displayOperation = findViewById(R.id.operation);
 
+        // Number buttons
         Button button0 = findViewById(R.id.button0);
         Button button1 = findViewById(R.id.button1);
         Button button2 = findViewById(R.id.button2);
@@ -46,28 +48,25 @@ public class MainActivity extends AppCompatActivity {
         Button button9 = findViewById(R.id.button9);
         Button buttonDot = findViewById(R.id.buttonDot);
 
-        Button buttonEquals =  findViewById(R.id.buttonEquals);
-        Button buttonPlus =  findViewById(R.id.buttonPlus);
-        Button buttonMinus = findViewById(R.id.buttonMinus);
-        Button buttonDivide = findViewById(R.id.buttonDivide);
-        Button buttonMultiply = findViewById(R.id.buttonMultiply);
+        Button[] buttons = {
+                button0, button1, button2, button3, button4,
+                button5, button6, button7, button8, button9, buttonDot};
 
         View.OnClickListener numberButtonListener = view -> {
             Button button = (Button) view;
             newNumber.append(button.getText().toString());
         };
 
-        button0.setOnClickListener(numberButtonListener);
-        button1.setOnClickListener(numberButtonListener);
-        button2.setOnClickListener(numberButtonListener);
-        button3.setOnClickListener(numberButtonListener);
-        button4.setOnClickListener(numberButtonListener);
-        button5.setOnClickListener(numberButtonListener);
-        button6.setOnClickListener(numberButtonListener);
-        button7.setOnClickListener(numberButtonListener);
-        button8.setOnClickListener(numberButtonListener);
-        button9.setOnClickListener(numberButtonListener);
-        buttonDot.setOnClickListener(numberButtonListener);
+        for (Button button : buttons) {
+            button.setOnClickListener(numberButtonListener);
+        }
+
+        // Operation buttons
+        Button buttonPlus =  findViewById(R.id.buttonPlus);
+        Button buttonMinus = findViewById(R.id.buttonMinus);
+        Button buttonDivide = findViewById(R.id.buttonDivide);
+        Button buttonMultiply = findViewById(R.id.buttonMultiply);
+        Button buttonEquals =  findViewById(R.id.buttonEquals);
 
         View.OnClickListener operationButtonListener = view -> {
             Button button = (Button) view;
@@ -89,6 +88,35 @@ public class MainActivity extends AppCompatActivity {
         buttonPlus.setOnClickListener(operationButtonListener);
         buttonMinus.setOnClickListener(operationButtonListener);
         buttonEquals.setOnClickListener(operationButtonListener);
+
+        // Negation button
+        Button buttonNegation = findViewById(R.id.buttonNegation);
+
+        View.OnClickListener negationButtonListener = view -> {
+            String value = newNumber.getText().toString();
+            if (value.length() != 0) {
+                double operand2 = Double.parseDouble(value);
+                operand2 *= -1;
+                newNumber.setText(String.valueOf(operand2));
+            }
+        };
+
+        buttonNegation.setOnClickListener(negationButtonListener);
+
+        // Clear button
+        Button buttonClear = findViewById(R.id.buttonClear);
+
+        View.OnClickListener clearButtonListener = view -> clear();
+
+        buttonClear.setOnClickListener(clearButtonListener);
+    }
+
+    private void clear () {
+        operand1 = null;
+        pendingOperation = "=";
+        displayOperation.setText(pendingOperation);
+        newNumber.setText("");
+        result.setText("");
     }
 
     @Override

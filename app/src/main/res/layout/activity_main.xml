@@ -54,7 +54,7 @@
         android:layout_marginTop="8dp"
         android:minWidth="48dp"
         android:text="0"
-        app:layout_constraintStart_toEndOf="@+id/buttonNegative"
+        app:layout_constraintStart_toEndOf="@+id/buttonNegation"
         app:layout_constraintTop_toBottomOf="@+id/button2" />
 
     <Button
@@ -188,7 +188,7 @@
         app:layout_constraintStart_toEndOf="@+id/buttonDot" />
 
     <Button
-        android:id="@+id/buttonNegative"
+        android:id="@+id/buttonNegation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
